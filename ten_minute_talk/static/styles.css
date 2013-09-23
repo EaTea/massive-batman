@@ -451,3 +451,15 @@ div.output .buttons {
   left: -5px;
   top: -5px;
 }
+
+.side-left {
+  padding-right: 10px;
+  float: left;
+  width: 50%;
+}
+
+.side-right {
+  padding-left: 10px;
+  float: right;
+  width: 50%;
+}
