@@ -135,11 +135,97 @@
       </article>
 
       <article>
+        <h2>
+          Changing resolutions...
+        </h2>
+      </article>
+
+      <article>
         <h3>
-          Is all lost?
+          Intrapolation
         </h3>
         <ul>
+          <li>high resolution to a low resolution</li>
+          <!-- TODO: these don't make so much sense -->
+          <li>takes more detail and ends up with less</li>
+          <li>you lose information but the process is accurate</li>
+          <li>requires less information and space to store image</li>
+        </ul>
+      </article>
 
+      <article>
+        <h3>
+          Extrapolation
+        </h3>
+        <ul>
+          <li>low resolution to a high resolution</li>
+          <li>tries to create more detail from less detail</li>
+          <li>cannot accurately "invent" detail out of nowhere</li>
+          <li>extrapolation creates images that don't look so nice</li>
+        </ul>
+      </article>
+
+      <article>
+        <h2>
+          What about colour and brightness?
+        </h2>
+      </article>
+
+      <article>
+        <h3>
+          How do we know about brightness?
+        </h3>
+        <ul>
+          <li>how many pixels influences quality</li>
+          <li>how do pixels influence brightness?</li>
+          <li>what do pixels store as information about brightness?</li>
+        </ul>
+      </article>
+
+      <article>
+        <h3>
+          On or off...
+        </h3>
+        <ul>
+          <li>initially pixels could either be "on" or "off"</li>
+          <li>"on" would make the pixel black</li>
+          <li>"off" would leave the pixel white</li>
+          <li>images with "on"/"off" pixels are called monochrome images</li>
+        </ul>
+      </article>
+
+      <article>
+        <h3>
+          Who remembers the GameBoy?
+        </h3>
+      </article>
+
+      <article>
+        <h3>
+          Different levels of "on"
+        </h3>
+        <ul>
+          <li>have 256 levels of "on"</li>
+          <li>0 is off and is white</li>
+          <li>255 is on and is black</li>
+          <li>which leaves us with 254 shades of grey</li>
+          <li>these images are called grayscale images</li>
+        </ul>
+      </article>
+
+      <article>
+        <h3>
+          Storing colour
+        </h3>
+        <ul>
+          <li>break images up into three components</li>
+          <li>the components are red, green and blue</li>
+          <!-- TODO red green blue colouring -->
+          <li>there can be 0 to 255 values of each component</li>
+          <li>higher amounts of a component means brighter/more of that
+          component</li>
+          <li>0 of each component is black</li>
+          <li>255 of each component is white</li>
         </ul>
       </article>
     </section>
