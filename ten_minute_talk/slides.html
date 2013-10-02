@@ -5,91 +5,6 @@
     <meta charset='utf-8'>
     <script type='text/javascript'>window.mod_pagespeed_start = Number(new Date());</script>
     <script src='slides.js'></script>
-    <script>
-    function hasGetUserMedia() {
-      // Note: Opera is unprefixed.
-      return !!(navigator.getUserMedia || navigator.webkitGetUserMedia ||
-          navigator.mozGetUserMedia ||
-          navigator.msGetUserMedia);
-    }
-
-  if (hasGetUserMedia()) {
-
-   var onFailSoHard = function(e) {
-         console.log('Reeeejected!', e);
-   };
-
-   window.URL = window.URL || window.webkitURL;
-   navigator.getUserMedia  = navigator.getUserMedia ||
-     navigator.webkitGetUserMedia ||
-     navigator.mozGetUserMedia ||
-     navigator.msGetUserMedia;
-
-   // Not showing vendor prefixes.
-   navigator.getUserMedia({video: true, audio: true},
-     function(localMediaStream)
-     {
-       var video = document.querySelector('video');
-       video.src = window.URL.createObjectURL(localMediaStream);
-
-       // Note: onloadedmetadata doesn't fire in Chrome when using
-       // it with getUserMedia.
-       // See crbug.com/110938.
-       video.onloadedmetadata = function(e) {
-       // Ready to go. Do some stuff
-         var video = document.querySelector('video');
-         var canvas = document.querySelector('canvas');
-         var ctx = canvas.getContext('2d');
-         var localMediaStream = null;
-
-         function snapshot() {
-           if (localMediaStream) {
-               ctx.drawImage(video, 0, 0);
-                   // "image/webp" works in Chrome 18. In other browsers, this will
-                   // fall back to image/png.
-                   document.querySelector('img').src =
-                     canvas.toDataURL('image/webp');
-                 }
-         }
-
-         video.addEventListener('click', snapshot, false);
-
-         // Not showing vendor prefixes or code that works cross-browser.
-         navigator.getUserMedia({video: true}, function(stream) {
-               video.src = window.URL.createObjectURL(stream);
-                 localMediaStream = stream;
-                 }, onFailSoHard);
-         };
-     },
-   onFailSoHard);
-
-  } else {
-  alert('getUserMedia() is not supported in your browser');
-}
-
-var video = document.querySelector('video');
-var canvas = document.querySelector('canvas');
-var ctx = canvas.getContext('2d');
-var localMediaStream = null;
-
-function snapshot() {
- if (localMediaStream) {
-     ctx.drawImage(video, 0, 0);
-         // "image/webp" works in Chrome 18. In other browsers, this will
-         // fall back to image/png.
-         document.querySelector('img').src =
-           canvas.toDataURL('image/webp');
-       }
-}
-
-video.addEventListener('click', snapshot, false);
-
-// Not showing vendor prefixes or code that works cross-browser.
-navigator.getUserMedia({video: true}, function(stream) {
-     video.src = window.URL.createObjectURL(stream);
-       localMediaStream = stream;
-       }, onFailSoHard);
-    </script>
   </head>
 
   <body style='display: none'>
@@ -108,7 +23,7 @@ navigator.getUserMedia({video: true}, function(stream) {
         <div style="text-align:centre;">
           <video id="webcam-video" autoplay></video>
           <p>
-            <button id="screenshot-button" onclick="screenshot()">Take a photo!</button>
+            <button id="screenshot-button">Take a photo!</button>
           </p>
         </div>
       </article>
@@ -117,9 +32,8 @@ navigator.getUserMedia({video: true}, function(stream) {
         <h3>
           Don't we look lovely?
         </h3>
-        <img id="screenshot" src="">
-        <canvas style="display:none;">
-        </canvas>
+        <img id="screenshot-img" src>
+        <canvas id="screenshot-canvas" style="display:none;"></canvas>
         <p>
           Lucky I'm not in it...
         </p>
@@ -390,6 +304,99 @@ navigator.getUserMedia({video: true}, function(stream) {
       </article>
     </section>
 
+    <script type="text/javascript">
+function hasGetUserMedia() {
+  // Note: Opera is unprefixed.
+  return !!(navigator.getUserMedia || navigator.webkitGetUserMedia ||
+      navigator.mozGetUserMedia ||
+      navigator.msGetUserMedia);
+}
+
+  if (hasGetUserMedia()) {
+
+   var onFailSoHard = function(e) {
+         console.log('Reeeejected!', e);
+   };
+
+   window.URL = window.URL || window.webkitURL;
+   navigator.getUserMedia  = navigator.getUserMedia ||
+     navigator.webkitGetUserMedia ||
+     navigator.mozGetUserMedia ||
+     navigator.msGetUserMedia;
+
+   // Not showing vendor prefixes.
+   navigator.getUserMedia({video: true, audio: true},
+     function(localMediaStream)
+     {
+       var video = document.querySelector('video');
+       video.src = window.URL.createObjectURL(localMediaStream);
+
+       // Note: onloadedmetadata doesn't fire in Chrome when using
+       // it with getUserMedia.
+       // See crbug.com/110938.
+       video.onloadedmetadata = function(e) {
+       // Ready to go. Do some stuff
+        alert("Good to go!");
+        
+       };
+     },
+   onFailSoHard);
+
+  } else {
+  alert('getUserMedia() is not supported in your browser');
+}
+var video = document.querySelector('#webcam-video');
+var button = document.querySelector('#screenshot-button');
+var canvas = document.querySelector('#screenshot-canvas');
+var img = document.querySelector('#screenshot-img');
+var ctx = canvas.getContext('2d');
+var localMediaStream = null;
+function sizeCanvas() {
+  setTimeout(function() {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      img.height = video.videoHeight;
+      img.width = video.videoWidth;
+  },
+  100);
+}
+function snapshot() {
+  ctx.drawImage(video, 0, 0);
+  img.src = canvas.toDataURL('image/webp');
+}
+button.addEventListener('click', function(e) {
+    if (localMediaStream) {
+      snapshot();
+      return;
+    }
+    if (navigator.webkitGetUserMedia) {
+      navigator.webkitGetUserMedia({video: true},
+      function(stream)
+      {
+        video.src = window.webkitURL.createObjectURL(stream);
+        localMediaStream = stream;
+        sizeCanvas();
+        button.textContent = 'Take a photo!';
+      },
+      onFailSoHard);
+    } else if (navigator.getUserMedia) {
+      navigator.getUserMedia('video',
+        function(stream)
+        {
+          video.src = stream;
+          localMediaStream = stream;
+          sizeCanvas();
+          button.textContent = 'Take a photo!';
+        },
+        onFailSoHard);
+    }
+    else {
+      onFailSoHard({target: video});
+    }
+}, false);
+
+video.addEventListener('click', snapshot, false);
+    </script>
 <script type="text/javascript" pagespeed_no_defer="">
   pagespeed.lazyLoadImages.overrideAttributeFunctions();
 </script>
